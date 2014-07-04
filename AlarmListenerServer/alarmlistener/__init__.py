@@ -20,11 +20,11 @@ from alarmlistener import (
     # Modules
 
     # Files
-    server
+    server, alarm_notification_handler
 )
 
 __all__ = [
-    "server"
+    "server", "alarm_notification_handler"
 ]
 
 __docformat__ = "epytext"
