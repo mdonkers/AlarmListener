@@ -12,7 +12,7 @@ import threading
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
 
 log = logging.getLogger(__name__)
-HOST, PORT = "localhost", 32001
+HOST, PORT = '', 32001
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -32,7 +32,7 @@ def _init_log():
 
 
 def run():
-    log.info("Starting Server...")
+    log.info('Starting Server...')
 
     # Create the server, binding to HOST on PORT
     server = ThreadedTCPServer((HOST, PORT), AlarmNotificationHandler)
@@ -43,13 +43,13 @@ def run():
     # Exit the server thread when the main thread terminates
     server_thread.daemon = True
     server_thread.start()
-    log.info("Server loop running in thread: %s", server_thread.name)
+    log.info('Server loop running in thread: %s', server_thread.name)
 
     try:
         while True:
             time.sleep(60)
     except KeyboardInterrupt:
-        log.info("Ctrl-c pressed, exiting ...")
+        log.info('Ctrl-c pressed, exiting ...')
         server.shutdown()
 
 

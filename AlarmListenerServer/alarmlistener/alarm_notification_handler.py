@@ -19,14 +19,12 @@ class AlarmNotificationHandler(socketserver.BaseRequestHandler):
     """
 
     def handle(self):
-        # self.request is the TCP socket connected to the client
-        # self.data = self.request.recv(1024).strip()
-        # log.debug("{} wrote:".format(self.client_address[0]))
-        # log.debug(self.data)
-        # just send back the same data, but upper-cased
-        # self.request.sendall(self.data.upper())
 
-        data = str(self.request.recv(1024), 'ascii')
-        log.debug("{}: {}".format(self.client_address[0], data))
-        # response = bytes("{}: {}".format(data), 'ascii')
-        # self.request.sendall(response)
+        try:
+            log.debug('Socket open... Connection received from {}.'.format(self.client_address[0]))
+            # Close connection because we expect no data
+            self.request.close()
+            log.debug('Socket connection closed...')
+
+        except OSError as error:
+            log.warn('Got error while reading from socket {}'.format(error.args[0]), exc_info=error)
