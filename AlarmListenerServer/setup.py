@@ -31,9 +31,9 @@ setup(
     author_email='miel.donkers@gmail.com',
     url='https://github.com/mdonkers/AlarmListener',
     packages=find_packages(exclude=["*.tests", "tests"]),
-    test_suite='nose.collector',
+    install_requires=['sqlalchemy'],
     tests_require=['nose'],
-    install_requires=[],
+    test_suite='nose.collector',
     entry_points={
         'console_scripts': [
             'alarmlistener = alarmlistener.server:run',

@@ -9,6 +9,7 @@ import logging
 import socketserver
 import threading
 
+from alarmlistener.event_controller import EventController
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
 
 log = logging.getLogger(__name__)
@@ -16,7 +17,14 @@ HOST, PORT = '', 32001
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    pass
+    """
+    Own TCPServer class, also extending from ThreadingMixIn to support multi-threading and
+    extending the __init__ method so we can set a reference to our Event Controller
+    """
+
+    def __init__(self, server_address, RequestHandlerClass, event_controller):
+        super().__init__(server_address, RequestHandlerClass)
+        self.event_controller = event_controller
 
 
 def _init_log():
@@ -32,10 +40,13 @@ def _init_log():
 
 
 def run():
+    # Instantiate Controller and EventStore
+    event_controller = EventController()
+
     log.info('Starting Server...')
 
     # Create the server, binding to HOST on PORT
-    server = ThreadedTCPServer((HOST, PORT), AlarmNotificationHandler)
+    server = ThreadedTCPServer((HOST, PORT), AlarmNotificationHandler, event_controller)
 
     # Start a thread with the server -- that thread will then start one
     # more thread for each request
@@ -51,6 +62,7 @@ def run():
     except KeyboardInterrupt:
         log.info('Ctrl-c pressed, exiting ...')
         server.shutdown()
+        # TODO Shutdown database connection
 
 
 #-----------------------------------------------------------------

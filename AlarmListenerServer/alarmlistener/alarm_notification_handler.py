@@ -26,5 +26,8 @@ class AlarmNotificationHandler(socketserver.BaseRequestHandler):
             self.request.close()
             log.debug('Socket connection closed...')
 
+            # Pass event on to Event Controller
+            self.server.event_controller.trigger_alarm_event()
+
         except OSError as error:
             log.warn('Got error while reading from socket {}'.format(error.args[0]), exc_info=error)

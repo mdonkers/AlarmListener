@@ -1,2 +1,5 @@
+# General dependencies
+sqlalchemy
+
 # Test runner/testing utils
 nose
