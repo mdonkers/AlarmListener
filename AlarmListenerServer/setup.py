@@ -19,7 +19,7 @@ Run the server with::
 
     $ python3 -m alarmlistener
 
-""" % (readme)
+""" % readme
 
 
 setup(

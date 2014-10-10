@@ -3,3 +3,4 @@ sqlalchemy
 
 # Test runner/testing utils
 nose
+coverage
