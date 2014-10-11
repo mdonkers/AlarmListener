@@ -11,6 +11,7 @@ import threading
 
 from alarmlistener.event_controller import EventController
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
+from alarmlistener.event_store import EventStore
 
 log = logging.getLogger(__name__)
 HOST, PORT = '', 32001
@@ -41,7 +42,8 @@ def _init_log():
 
 def run():
     # Instantiate Controller and EventStore
-    event_controller = EventController()
+    event_store = EventStore()
+    event_controller = EventController(event_store)
 
     log.info('Starting Server...')
 
@@ -62,7 +64,7 @@ def run():
     except KeyboardInterrupt:
         log.info('Ctrl-c pressed, exiting ...')
         server.shutdown()
-        # TODO Shutdown database connection
+        event_store.close()
 
 
 #-----------------------------------------------------------------
