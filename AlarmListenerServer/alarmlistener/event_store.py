@@ -2,7 +2,7 @@ __author__ = 'Miel Donkers <miel.donkers@gmail.com>'
 
 import logging
 
-from sqlalchemy import create_engine, MetaData, Column, Table, Integer, DateTime
+from sqlalchemy import create_engine, MetaData, Column, Table, Integer, DateTime, select, desc
 
 
 log = logging.getLogger(__name__)
@@ -40,10 +40,12 @@ class EventStore():
     def find_last_events(self, max_events=2):
         connection = self.engine.connect()
 
-        result = connection.execute('SELECT * FROM alarm_events ORDER BY timestamp DESC LIMIT ?', max_events)
+        select_statement = select([self.alarm_events]).order_by(desc("timestamp")).limit(max_events)
+        result = connection.execute(select_statement)
+
         timestamp_results = tuple(row[self.alarm_events.c.timestamp] for row in result)
         log.debug('Got result from alarm_events, query limited to {max} records. Results: {rows}'
-                  .format(max=max_events, rows=', '.join(timestamp_results)))
+                  .format(max=max_events, rows=', '.join(str(tstamp) for tstamp in timestamp_results)))
 
         result.close()
         connection.close()
