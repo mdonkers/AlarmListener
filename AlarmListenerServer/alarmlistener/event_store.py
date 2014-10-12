@@ -35,17 +35,16 @@ class EventStore():
     def store_event(self, timestamp):
         with self.engine.begin() as connection:
             result = connection.execute(self.alarm_events.insert(), timestamp=timestamp)
-            log.debug('Event insert result: {}'.format(result))
+            log.debug('Event inserted correctly, generated primary key: {}'.format(result.inserted_primary_key))
 
     def find_last_events(self, max_events=2):
         connection = self.engine.connect()
 
-        result = connection.execute('SELECT * FROM alarm_events ORDER BY timestamp LIMIT ?', max_events)
-        log.debug('Last events query result with max={}, result: {}'.format(max_events, result))
+        result = connection.execute('SELECT * FROM alarm_events ORDER BY timestamp DESC LIMIT ?', max_events)
+        timestamp_results = tuple(row[self.alarm_events.c.timestamp] for row in result)
+        log.debug('Got result from alarm_events, query limited to {max} records. Results: {rows}'
+                  .format(max=max_events, rows=', '.join(timestamp_results)))
 
         result.close()
         connection.close()
-
-
-# for row in result:
-#     print "username:", row['username']
+        return timestamp_results

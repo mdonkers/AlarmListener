@@ -17,4 +17,6 @@ class EventController():
         self.event_store.store_event(datetime.utcnow())
 
         # TODO get last 2 events and check whether they are too close or too far apart
-        self.event_store.find_last_events(3)
+        last_events = self.event_store.find_last_events()
+
+        log.debug('Results received by controller: {}'.format(last_events))
