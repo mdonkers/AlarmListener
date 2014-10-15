@@ -38,6 +38,11 @@ class EventStore():
             log.debug('Event inserted correctly, generated primary key: {}'.format(result.inserted_primary_key))
 
     def find_last_events(self, max_events=2):
+        """
+        Return the last alarm events that were stored in the database, ordered from most recent to oldest.
+        :param max_events: The maximum number of events to query for, default = 2
+        :return: Ordered list of alarm events, from most recent to oldest
+        """
         connection = self.engine.connect()
 
         select_statement = select([self.alarm_events]).order_by(desc("timestamp")).limit(max_events)

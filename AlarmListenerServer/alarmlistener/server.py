@@ -15,6 +15,7 @@ from alarmlistener.event_store import EventStore
 
 log = logging.getLogger(__name__)
 HOST, PORT = '', 32001
+EVENT_HEARTBEAT_IN_SEC = 60
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -43,7 +44,7 @@ def _init_log():
 def run():
     # Instantiate Controller and EventStore
     event_store = EventStore()
-    event_controller = EventController(event_store)
+    event_controller = EventController(event_store, EVENT_HEARTBEAT_IN_SEC)
 
     log.info('Starting Server...')
 
