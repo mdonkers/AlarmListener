@@ -21,7 +21,7 @@ class TestEventController(TestCase):
     @patch('alarmlistener.event_controller.log')
     def test_do_nothing_if_less_than_two_events_returned(self, log_mock):
         event_store_mock = MagicMock(spec=EventStore)
-        event_store_mock.find_last_events.return_value = tuple([datetime(2000, 1, 1)])
+        event_store_mock.find_last_events.return_value = datetime(2000, 1, 1),
         sut_event_controller = EventController(event_store_mock, 60)
 
         sut_event_controller.trigger_alarm_event()
@@ -32,7 +32,7 @@ class TestEventController(TestCase):
     @patch('alarmlistener.event_controller.log')
     def test_log_warning_if_events_too_far_apart(self, log_mock):
         event_store_mock = MagicMock(spec=EventStore)
-        event_store_mock.find_last_events.return_value = tuple([datetime(2000, 1, 1, 12, 6, 34), datetime(2000, 1, 1, 12, 5, 32)])
+        event_store_mock.find_last_events.return_value = datetime(2000, 1, 1, 12, 6, 34), datetime(2000, 1, 1, 12, 5, 32)
         sut_event_controller = EventController(event_store_mock, 60)
 
         sut_event_controller.trigger_alarm_event()
@@ -44,7 +44,7 @@ class TestEventController(TestCase):
     @patch('alarmlistener.event_controller.log')
     def test_log_warning_if_events_too_close_together(self, log_mock):
         event_store_mock = MagicMock(spec=EventStore)
-        event_store_mock.find_last_events.return_value = tuple([datetime(2000, 1, 1, 12, 6, 30), datetime(2000, 1, 1, 12, 5, 32)])
+        event_store_mock.find_last_events.return_value = datetime(2000, 1, 1, 12, 6, 30), datetime(2000, 1, 1, 12, 5, 32)
         sut_event_controller = EventController(event_store_mock, 60)
 
         sut_event_controller.trigger_alarm_event()
@@ -56,7 +56,7 @@ class TestEventController(TestCase):
     @patch('alarmlistener.event_controller.log')
     def test_do_nothing_if_delta_timestamps_within_expected_range(self, log_mock):
         event_store_mock = MagicMock(spec=EventStore)
-        event_store_mock.find_last_events.return_value = tuple([datetime(2000, 1, 1, 12, 6, 33), datetime(2000, 1, 1, 12, 5, 32)])
+        event_store_mock.find_last_events.return_value = datetime(2000, 1, 1, 12, 6, 33), datetime(2000, 1, 1, 12, 5, 32)
         sut_event_controller = EventController(event_store_mock, 60)
 
         sut_event_controller.trigger_alarm_event()
