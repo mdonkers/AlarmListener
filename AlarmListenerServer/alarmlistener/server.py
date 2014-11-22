@@ -58,6 +58,7 @@ def run():
     server_thread.daemon = True
     server_thread.start()
     log.info('Server loop running in thread: %s', server_thread.name)
+    event_controller.start()
 
     try:
         while True:
