@@ -5,8 +5,7 @@ python:
 install:
   - pip3 install -r requirements.txt
   # Install ourself to test own code
-  - pip install -e AlarmListenerServer
+  - pip install -e .
 # command to run tests, e.g. python setup.py test
 script:
-  - cd AlarmListenerServer
   - nosetests --nocapture --with-coverage --cover-erase --cover-package=alarmlistener

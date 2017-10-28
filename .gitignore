@@ -54,3 +54,6 @@ target/
 
 .gradle
 local.properties
+
+# SQLite DB when running locally
+alarm_events.db
