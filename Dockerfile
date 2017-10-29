@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM arm32v6/python:alpine
 LABEL maintainer="Miel Donkers"
 
 
