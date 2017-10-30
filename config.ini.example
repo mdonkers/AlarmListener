@@ -1,0 +1,3 @@
+[ALARM]
+log_level = info
+heartbeat_interval_min = 10

@@ -1,3 +1,12 @@
+# OWN FILES #
+
+# SQLite DB when running locally
+alarm_events.db
+
+config.ini
+
+
+# OTHER FILES
 *.ipr
 *.iws
 
@@ -54,6 +63,3 @@ target/
 
 .gradle
 local.properties
-
-# SQLite DB when running locally
-alarm_events.db

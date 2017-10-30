@@ -10,7 +10,7 @@ __author__ = 'Miel Donkers <miel.donkers@gmail.com>'
 log = logging.getLogger(__name__)
 
 
-class EventController():
+class EventController:
     def __init__(self, event_store, event_heartbeat_in_sec):
         self.event_store = event_store
         self.event_heartbeat = event_heartbeat_in_sec
@@ -39,7 +39,7 @@ class EventController():
         heartbeat_deviation = self.event_heartbeat - delta_time.total_seconds()
         heartbeat_margin = self.event_heartbeat // 50
         if heartbeat_deviation < -heartbeat_margin or heartbeat_deviation > heartbeat_margin:
-            log.warn('Events received out of heartbeat range, must be something wrong!! Delta time = {}'.format(str(delta_time.total_seconds() // 1)))
+            log.warning('Events received out of heartbeat range, must be something wrong!! Delta time = {} seconds'.format(str(delta_time.total_seconds() // 1)))
 
 
 class EventCheckScheduler(Thread):
@@ -53,7 +53,7 @@ class EventCheckScheduler(Thread):
             log.info('Checking delay in alarm events stored')
             last_event = next(iter(self.event_store.find_last_events(max_events=1)))
             if _is_event_delta_falsify(last_event, self.event_heartbeat):
-                log.warn('Events received out of heartbeat range, must be something wrong!!')
+                log.warning('Events received out of heartbeat range, must be something wrong!!')
 
             # Re-schedule ourself
             reschedule_time = datetime.now() + timedelta(seconds=self.event_heartbeat)

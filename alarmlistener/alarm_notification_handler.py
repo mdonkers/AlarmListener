@@ -30,4 +30,4 @@ class AlarmNotificationHandler(socketserver.BaseRequestHandler):
             self.server.event_controller.trigger_alarm_event()
 
         except OSError as error:
-            log.warn('Got error while reading from socket {}'.format(error.args[0]), exc_info=error)
+            log.warning('Got error while reading from socket {}'.format(error.args[0]), exc_info=error)

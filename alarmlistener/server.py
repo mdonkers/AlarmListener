@@ -9,13 +9,13 @@ import logging
 import socketserver
 import threading
 
+from alarmlistener.config import LOG_LEVEL, HEARTBEAT_INTERVAL_MIN
 from alarmlistener.event_controller import EventController
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
 from alarmlistener.event_store import EventStore
 
 log = logging.getLogger(__name__)
 HOST, PORT = '', 32001
-EVENT_HEARTBEAT_IN_SEC = 60
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -33,18 +33,18 @@ def _init_log():
     # create console handler with with formatting and log level
     _formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     _console_handler = logging.StreamHandler()
-    _console_handler.setLevel(logging.DEBUG)
+    _console_handler.setLevel(LOG_LEVEL)
     _console_handler.setFormatter(_formatter)
     # add the handlers to the logger
     _root_logger = logging.getLogger()
     _root_logger.addHandler(_console_handler)
-    _root_logger.setLevel(logging.DEBUG)
+    _root_logger.setLevel(LOG_LEVEL)
 
 
 def run():
     # Instantiate Controller and EventStore
     event_store = EventStore()
-    event_controller = EventController(event_store, EVENT_HEARTBEAT_IN_SEC)
+    event_controller = EventController(event_store, event_heartbeat_in_sec=HEARTBEAT_INTERVAL_MIN * 60)
 
     log.info('Starting Server...')
 
