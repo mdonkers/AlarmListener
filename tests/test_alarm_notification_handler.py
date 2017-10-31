@@ -27,6 +27,6 @@ class TestAlarmNotificationHandler(unittest.TestCase):
         AlarmNotificationHandler(request_mock, MagicMock(), server_mock)
 
         self.assertTrue(log_mock.debug.called)
-        self.assertTrue(log_mock.warn.called)
-        self.assertEqual(log_mock.warn.call_count, 1)
+        self.assertTrue(log_mock.warning.called)
+        self.assertEqual(log_mock.warning.call_count, 1)
         self.assertFalse(server_mock.event_controller.trigger_alarm_event.called, msg="Trigger Alarm Event should not have been called")

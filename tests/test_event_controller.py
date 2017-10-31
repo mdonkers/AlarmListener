@@ -37,8 +37,8 @@ class TestEventController(TestCase):
 
         sut_event_controller.trigger_alarm_event()
 
-        self.assertTrue(log_mock.warn.called)
-        last_call_args = log_mock.warn.call_args  # Returns arguments of last call
+        self.assertTrue(log_mock.warning.called)
+        last_call_args = log_mock.warning.call_args  # Returns arguments of last call
         self.assertIn('out of heartbeat range', last_call_args[0][0])  # last_call_args = tuple containing tuple
 
     @patch('alarmlistener.event_controller.log')
@@ -49,8 +49,8 @@ class TestEventController(TestCase):
 
         sut_event_controller.trigger_alarm_event()
 
-        self.assertTrue(log_mock.warn.called)
-        last_call_args = log_mock.warn.call_args  # Returns arguments of last call
+        self.assertTrue(log_mock.warning.called)
+        last_call_args = log_mock.warning.call_args  # Returns arguments of last call
         self.assertIn('out of heartbeat range', last_call_args[0][0])  # last_call_args = tuple containing tuple
 
     @patch('alarmlistener.event_controller.log')
@@ -61,4 +61,4 @@ class TestEventController(TestCase):
 
         sut_event_controller.trigger_alarm_event()
 
-        self.assertFalse(log_mock.warn.called)
+        self.assertFalse(log_mock.warning.called)
