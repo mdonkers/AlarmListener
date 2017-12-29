@@ -6,6 +6,8 @@ install:
   - pip3 install -r requirements.txt
   # Install ourself to test own code
   - pip install -e .
+  # Make sure there is a configuration file present with values
+  - cp config.ini.example config.ini
 # command to run tests, e.g. python setup.py test
 script:
   - nosetests --nocapture --with-coverage --cover-erase --cover-package=alarmlistener
