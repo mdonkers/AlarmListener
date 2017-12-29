@@ -9,11 +9,11 @@ Environment variables equal the variables in the `config.ini` file, but names mu
 group and all upper-case. E.g.:
 
     [ALARM]
-    heartbeat_interval_min
+    heartbeat_interval_sec
 
 becomes the environment variable:
 
-    ALARM_HEARTBEAT_INTERVAL_MIN
+    ALARM_HEARTBEAT_INTERVAL_SEC
 
 
 ## Docker build and run

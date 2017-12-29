@@ -1,3 +1,11 @@
 [ALARM]
 log_level = info
-heartbeat_interval_min = 10
+heartbeat_interval_sec = 600
+
+[MAIL]
+backoff_timeout_in_sec = 3600
+smtp_address = smtp.mymailer.com:465
+smtp_username = someuser
+smtp_password = my-secret-password
+from_address = me@myself.com
+to_address = you@myself.com

@@ -9,7 +9,8 @@ import logging
 import socketserver
 import threading
 
-from alarmlistener.config import LOG_LEVEL, HEARTBEAT_INTERVAL_MIN
+from alarmlistener.config import LOG_LEVEL, HEARTBEAT_INTERVAL_SEC, BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS
+from alarmlistener.mailer import Mailer
 from alarmlistener.event_controller import EventController
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
 from alarmlistener.event_store import EventStore
@@ -43,8 +44,9 @@ def _init_log():
 
 def run():
     # Instantiate Controller and EventStore
+    mailer = Mailer(BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS)
     event_store = EventStore()
-    event_controller = EventController(event_store, event_heartbeat_in_sec=HEARTBEAT_INTERVAL_MIN * 60)
+    event_controller = EventController(event_store, event_heartbeat_in_sec=HEARTBEAT_INTERVAL_SEC, mailer=mailer)
 
     log.info('Starting Server...')
 

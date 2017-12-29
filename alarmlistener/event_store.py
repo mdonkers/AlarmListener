@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, MetaData, Column, Table, Integer, DateTime
 log = logging.getLogger(__name__)
 
 
-class EventStore():
+class EventStore:
     """
     The EventStore manages database connections and provides methods to store alarm notification events and retrieve them.
 
