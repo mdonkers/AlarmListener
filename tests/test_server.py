@@ -14,15 +14,18 @@ class TestServer(TestCase):
 
     # Take care for the order of multiple mock parameters, fed bottom-up as parameters
     @patch('alarmlistener.server.ThreadedTCPServer')
+    @patch('alarmlistener.server.ThreadedMonitorServer')
     @patch('alarmlistener.server.EventStore')
     @patch('alarmlistener.server.EventController')
     @patch('alarmlistener.server.threading')
     @patch('alarmlistener.server.time')
-    def test_starting_server(self, time_mock, threading_mock, EventController_mock, EventStore_mock, ThreadedTCPServer_mock):
+    def test_starting_server(self, time_mock, threading_mock, EventController_mock, EventStore_mock,
+                             ThreadedTCPServer_mock, ThreadedMonitorServer_mock):
         time_mock.sleep.side_effect = KeyboardInterrupt('some exception when pressing ctrl-c')
 
         server.run()
 
         self.assertTrue(threading_mock.Thread().start.called)
         self.assertTrue(ThreadedTCPServer_mock().shutdown.called)
+        self.assertTrue(ThreadedMonitorServer_mock().shutdown.called)
         self.assertTrue(EventStore_mock().close.called)
