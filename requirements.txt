@@ -1,5 +1,7 @@
 # General dependencies
 sqlalchemy
+Jinja2
+setuptools
 
 # Test runner/testing utils
 nose

@@ -43,6 +43,10 @@ class EventController:
             log.warning('Events received out of heartbeat range, must be something wrong!! Delta time = {} seconds'.format(str(delta_time.total_seconds() // 1)))
             self.mailer.sendMail('Events received out of heartbeat range ({}), delta time = {} seconds'.format(str(self.event_heartbeat), str(delta_time.total_seconds() // 1)))
 
+    def get_last_event_timestamp(self):
+        events = self.event_store.find_last_events(max_events=1)
+        return events[0] if len(events) > 0 else None
+
 
 class EventCheckScheduler(Thread):
     def __init__(self, event_store, event_heartbeat_in_sec, mailer):

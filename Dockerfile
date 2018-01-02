@@ -31,6 +31,7 @@ RUN addgroup alarm \
 
 # Expose port
 EXPOSE 32001
+EXPOSE 8080
 
 # VOLUME /usr/src/app
 # VOLUME /tmp

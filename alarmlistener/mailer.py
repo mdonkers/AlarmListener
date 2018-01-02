@@ -26,7 +26,7 @@ class Mailer:
 
         log.info('Trying to send mail with message: {}'.format(str(message)))
         try:
-            with SMTP_SSL(self.smtp_address) as smtp:
+            with SMTP_SSL(self.smtp_address, timeout=30) as smtp:  # 30 sec timeout should be sufficient
                 Mailer.last_mail_timestamp = datetime.utcnow()
                 # smtp.set_debuglevel(2)
                 smtp.login(self.smtp_user, self.smtp_password)
