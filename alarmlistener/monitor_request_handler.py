@@ -51,7 +51,8 @@ class MonitorRequestHandler(BaseHTTPRequestHandler):
         template = env.get_template('index.html')
         template_bytes = bytes(template.render({
             'last_event_timestamp': self.server.event_controller.get_last_event_timestamp(),
-            'last_alarm_timestamp': None
+            'last_alarm_timestamp': self.server.event_controller.get_last_alarm_timestamp(),
+            'last_email_timestamp': self.server.mailer.get_last_mail_timestamp()
         }), 'utf-8')
         self._send_get_headers(template_bytes)
         self.wfile.write(template_bytes)
