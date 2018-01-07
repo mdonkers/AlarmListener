@@ -3,6 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Alarm Status Information</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            var mailResultText = $( "#mail-test-result" );
+            $( "#mail-test-btn").on( "click", function( event ) {
+
+                $.ajax({
+                    url: '/test-mail',
+                    method: 'PUT',
+                    success: function (data, textStatus, xhr) {
+                        mailResultText.html(textStatus + ' - code: ' +xhr.status + ', ' + xhr.statusText)
+                    },
+                    error: function(xhr, textStatus) {
+                        mailResultText.html(textStatus + ' - code: ' +xhr.status + ', ' + xhr.statusText)
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <h1>Alarm Status Information</h1>
@@ -15,5 +37,8 @@
     <p>
     Last email timestamp: {{ last_email_timestamp }}
     </p>
+    <hr />
+    <input type="button" id="mail-test-btn" value="Send test e-mail">
+    <p>Mail send result: <span id="mail-test-result"></span></p>
 </body>
 </html>
