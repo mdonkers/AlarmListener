@@ -23,6 +23,21 @@
                     }
                 });
             });
+
+            var smsResultText = $( "#sms-test-result" );
+            $( "#sms-test-btn").on( "click", function( event ) {
+
+                $.ajax({
+                    url: '/test-sms',
+                    method: 'PUT',
+                    success: function (data, textStatus, xhr) {
+                        smsResultText.html(textStatus + ' - code: ' +xhr.status + ', ' + xhr.statusText)
+                    },
+                    error: function(xhr, textStatus) {
+                        smsResultText.html(textStatus + ' - code: ' +xhr.status + ', ' + xhr.statusText)
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -37,8 +52,16 @@
     <p>
     Last email timestamp: {{ last_email_timestamp }}
     </p>
+    <p>
+    Last sms timestamp: {{ last_sms_timestamp }}
+    </p>
+    <p>
+    Remaining sms credit: {{ remaining_sms_credit }}
+    </p>
     <hr />
     <input type="button" id="mail-test-btn" value="Send test e-mail">
     <p>Mail send result: <span id="mail-test-result"></span></p>
+    <input type="button" id="sms-test-btn" value="Send test sms">
+    <p>SMS send result: <span id="sms-test-result"></span></p>
 </body>
 </html>

@@ -12,10 +12,11 @@ log = logging.getLogger(__name__)
 
 
 class EventController:
-    def __init__(self, event_store, event_heartbeat_in_sec, mailer):
+    def __init__(self, event_store, event_heartbeat_in_sec, mailer, sms_sender):
         self.event_store = event_store
         self.event_heartbeat = event_heartbeat_in_sec
         self.mailer = mailer
+        self.sms_sender = sms_sender
         self.last_alarm_timestamp = None
 
     def start(self):
@@ -56,6 +57,7 @@ class EventController:
     def _send_alarm_notifications(self, log_msg, mail_msg):
         self.last_alarm_timestamp = datetime.utcnow()
         log.warning(log_msg)
+        self.sms_sender.send_sms(mail_msg)
         self.mailer.send_mail(mail_msg)
 
     def get_last_event_timestamp(self):

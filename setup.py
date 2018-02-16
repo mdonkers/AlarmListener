@@ -31,7 +31,7 @@ setup(
     author_email='miel.donkers@gmail.com',
     url='https://github.com/mdonkers/AlarmListener',
     packages=find_packages(exclude=["*.tests", "tests"]),
-    install_requires=['sqlalchemy', 'Jinja2', 'setuptools'],
+    install_requires=['requests', 'sqlalchemy', 'Jinja2', 'setuptools'],
     tests_require=['nose'],
     test_suite='nose.collector',
     entry_points={

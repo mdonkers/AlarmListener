@@ -52,7 +52,9 @@ class MonitorRequestHandler(BaseHTTPRequestHandler):
         template_bytes = bytes(template.render({
             'last_event_timestamp': self.server.event_controller.get_last_event_timestamp(),
             'last_alarm_timestamp': self.server.event_controller.get_last_alarm_timestamp(),
-            'last_email_timestamp': self.server.mailer.get_last_mail_timestamp()
+            'last_email_timestamp': self.server.mailer.get_last_mail_timestamp(),
+            'last_sms_timestamp': self.server.sms_sender.get_last_sms_timestamp(),
+            'remaining_sms_credit': self.server.sms_sender.get_remaining_credit()
         }), 'utf-8')
         self._send_get_headers(template_bytes)
         self.wfile.write(template_bytes)
@@ -64,9 +66,13 @@ class MonitorRequestHandler(BaseHTTPRequestHandler):
                 self.server.mailer.send_mail('Test message from Alarm Listener', ignore_last_mail_timestamp=True)
                 self.send_response(HTTPStatus.OK, 'Success sending test mail')
                 self.end_headers()
+            elif '/test-sms' == self._get_translated_path():
+                self.server.sms_sender.send_sms('Test SMS from Alarm Listener', ignore_last_sms_timestamp=True)
+                self.send_response(HTTPStatus.OK, 'Success sending test SMS')
+                self.end_headers()
             else:
                 log.warning('Ignoring unexpected PUT request for path {}'.format(self._get_translated_path()))
                 self.send_error(HTTPStatus.BAD_REQUEST, 'Request not supported')
         except Exception as e:
-            log.exception('Caught exception when sending test mail')
-            self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR, 'Sending test mail failed; {}'.format(e))
+            log.exception('Caught exception when sending test mail/sms - ' + self._get_translated_path())
+            self.send_error(HTTPStatus.INTERNAL_SERVER_ERROR, 'Sending test mail/sms failed; {}'.format(e))

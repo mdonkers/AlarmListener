@@ -12,8 +12,11 @@ import threading
 from http.server import HTTPServer
 
 from alarmlistener.monitor_request_handler import MonitorRequestHandler
-from alarmlistener.config import LOG_LEVEL, HEARTBEAT_INTERVAL_SEC, BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS
+from alarmlistener.config import LOG_LEVEL, HEARTBEAT_INTERVAL_SEC, MAIL_BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, \
+    SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS, SMS_BACKOFF_TIMEOUT_IN_SEC, SMS_API_KEY, FROM_NUMBER, \
+    TO_NUMBER
 from alarmlistener.mailer import Mailer
+from alarmlistener.sms_sender import SmsSender
 from alarmlistener.event_controller import EventController
 from alarmlistener.alarm_notification_handler import AlarmNotificationHandler
 from alarmlistener.event_store import EventStore
@@ -39,10 +42,11 @@ class ThreadedMonitorServer(socketserver.ThreadingMixIn, HTTPServer):
     Own Threaded HTTP Server to run as daemon thread
     """
 
-    def __init__(self, server_address, request_handler_class, event_controller, mailer):
+    def __init__(self, server_address, request_handler_class, event_controller, mailer, sms_sender):
         super().__init__(server_address, request_handler_class)
         self.event_controller = event_controller
         self.mailer = mailer
+        self.sms_sender = sms_sender
 
 
 def _init_log():
@@ -68,15 +72,16 @@ def _run_threaded(server_class):
 
 def run():
     # Instantiate Controller and EventStore
-    mailer = Mailer(BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS)
+    mailer = Mailer(MAIL_BACKOFF_TIMEOUT_IN_SEC, SMTP_ADDRESS, SMTP_USERNAME, SMTP_PASSWORD, FROM_ADDRESS, TO_ADDRESS)
+    sms_sender = SmsSender(SMS_BACKOFF_TIMEOUT_IN_SEC, SMS_API_KEY, FROM_NUMBER, TO_NUMBER)
     event_store = EventStore()
-    event_controller = EventController(event_store, event_heartbeat_in_sec=HEARTBEAT_INTERVAL_SEC, mailer=mailer)
+    event_controller = EventController(event_store, event_heartbeat_in_sec=HEARTBEAT_INTERVAL_SEC, mailer=mailer, sms_sender=sms_sender)
 
-    log.info('Starting Monitor site...')
-    httpd = ThreadedMonitorServer((MONITOR_HOST, MONITOR_PORT), MonitorRequestHandler, event_controller, mailer)
+    log.info('Starting Monitor site on port %s...', MONITOR_PORT)
+    httpd = ThreadedMonitorServer((MONITOR_HOST, MONITOR_PORT), MonitorRequestHandler, event_controller, mailer, sms_sender)
     _run_threaded(httpd)
 
-    log.info('Starting Alarm Server...')
+    log.info('Starting Alarm Server on port %s...', ALARM_PORT)
     alarm_server = ThreadedTCPServer((ALARM_HOST, ALARM_PORT), AlarmNotificationHandler, event_controller)
     _run_threaded(alarm_server)
 

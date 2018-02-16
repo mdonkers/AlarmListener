@@ -9,3 +9,9 @@ smtp_username = someuser
 smtp_password = my-secret-password
 from_address = me@myself.com
 to_address = you@myself.com
+
+[SMS]
+backoff_timeout_in_sec = 3600
+api_key = test_key
+from_number = 31612345678
+to_number = 31612345678
